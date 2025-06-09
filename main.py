@@ -8,15 +8,27 @@ from funcoes.func import atualiza_cogumelo
 from funcoes.func import atualiza_cogumelo_verde
 from funcoes.func import aguardar
 def menu():
+        import os
+        import ctypes
         import pygame.mixer  
+        import tkinter as tk
+        import tkinter.font as font
         pygame.mixer.init()
         pygame.mixer.music.load("recursos/musica menu.mp3")  
         pygame.mixer.music.set_volume(0.3)
         pygame.mixer.music.play(loops=-1)
 
+        caminho_fonte = os.path.abspath("fonte.ttf")
+        ctypes.windll.gdi32.AddFontResourceW(caminho_fonte)
+
+        nome_fonte = "Jersey 15 Regular" 
+
         global root
         root = tk.Tk()
         root.title("Menu Principal")
+        global fonte_botoes
+        fonte_titulo = font.Font(family=nome_fonte, size= 60, weight= "bold")
+        fonte_botoes = font.Font(family=nome_fonte, size= 25, weight= "bold")
 
         largura = 1000
         altura = 700
@@ -34,8 +46,12 @@ def menu():
         root.after(10, lambda: root.attributes("-topmost", False))
         root.configure(bg="#282c34")
 
-        titulo = tk.Label(root, text= "Cat's Dream", font=("Arial", 40 , "bold"), fg= "white", bg="#282c34" )
-        titulo.pack(pady=80)
+        imagem_fundo = tk.PhotoImage(file="recursos/fundo menu.png")
+        label_fundo = tk.Label(root, image= imagem_fundo)
+        label_fundo.place(x=0, y=0, relwidth=1, relheight=1)
+
+        titulo = tk.Label(root, text= "Cat's Dream", font=fonte_titulo, fg= "white", bg="#2650a4")
+        titulo.place(x=30, y=100)
 
         botao_jogar = tk.Button(
             root,
@@ -43,11 +59,11 @@ def menu():
             command=iniciar_jogo,
             width=20,
             height=2,
-            bg="#4CAF50",  
+            bg="#1A6DE2",  
             fg="white",
-            font=("Arial", 16, "bold")
+            font=fonte_botoes
             )
-        botao_jogar.pack(pady=10)
+        botao_jogar.place(x=60, y=250)
         
         botao_tutorial = tk.Button(
             root,
@@ -55,11 +71,11 @@ def menu():
             command=mostrar_tutorial,
             width=20,
             height=2,
-            bg="#4CAF50",  
+            bg="#1A6DE2",  
             fg="white",
-            font=("Arial", 16, "bold")
+            font=fonte_botoes
             )
-        botao_tutorial.pack(pady=10)
+        botao_tutorial.place(x=60, y=350)
 
         botao_historico = tk.Button(
             root,
@@ -67,11 +83,11 @@ def menu():
             command=mostrar_historico,
             width=20,
             height=2,
-            bg="#4CAF50",  
+            bg="#1A6DE2",  
             fg="white",
-            font=("Arial", 16, "bold")
+            font=fonte_botoes
             )
-        botao_historico.pack(pady=10)
+        botao_historico.place(x=60, y=450)
 
         botao_sair = tk.Button(
             root,
@@ -79,18 +95,23 @@ def menu():
             command=sair_jogo,
             width=20,
             height=2,
-            bg="#4CAF50",  
+            bg="#1A6DE2",  
             fg="white",
-            font=("Arial", 16, "bold")
+            font=fonte_botoes
             )
-        botao_sair.pack(pady=10)
-
-
+        
+        botao_sair.place(x=60, y=550)
 
         root.mainloop()
 def sair_jogo():
-    root.destroy()
-    exit()
+    import tkinter
+    from tkinter import messagebox
+    resposta = messagebox.askyesno("Você deseja sair do jogo?")
+    if resposta:
+        root.destroy()
+        exit()
+    else:
+        return
 
 def mostrar_tutorial():
 
@@ -104,12 +125,10 @@ def mostrar_tutorial():
     root_x = root.winfo_x()
     root_y = root.winfo_y()
 
-    
     pos_x = root_x + (root.winfo_width() // 2) - (largura // 2)
     pos_y = root_y + (root.winfo_height() // 2) - (altura // 2)
 
     janela_tutorial.geometry(f"{largura}x{altura}+{pos_x}+{pos_y}")
-
     janela_tutorial.transient(root)
     janela_tutorial.grab_set()
     janela_tutorial.focus_set()
@@ -119,7 +138,6 @@ def mostrar_tutorial():
 
     frame_imagem = tk.Frame(janela_tutorial,width=1000, height=550, bg="#282c34")
     frame_imagem.pack()
-    frame_imagem.pack_propagate(False)
 
     label_imagem = tk.Label(frame_imagem, image=imagem_tutorial, bg="#282c34")
     label_imagem.image = imagem_tutorial
@@ -129,21 +147,114 @@ def mostrar_tutorial():
         janela_tutorial,
         text="Voltar",
         command=janela_tutorial.destroy,
-        width=15,
-        height=2,
-        bg="#4CAF50",
+        width=10,
+        height=1,
+        bg="#1A6DE2",
         fg="white",
-        font=("Arial", 16, "bold")
+        font=fonte_botoes
     )
-    botao_voltar_tutorial.pack(pady=10)
+    botao_voltar_tutorial.place(x=20, y=620)
 
 def mostrar_historico():
-    messagebox.showinfo('a defenir')
+
+    janela_historico = tk.Toplevel(root)
+    janela_historico.title("Histórico")
+    janela_historico.configure(bg="#282c34")
+
+    largura = 1000
+    altura = 700
+
+    root_X = root.winfo_x()
+    root_Y = root.winfo_y()
+
+    pos_x = root_X + (root.winfo_width() // 2) - (largura // 2)
+    pos_y = root_Y + (root.winfo_height() // 2) - (altura // 2)
+
+    janela_historico.geometry(f"{largura}x{altura}+{pos_x}+{pos_y}")
+    janela_historico.transient(root)
+    janela_historico.grab_set()
+    janela_historico.focus_set()
+    janela_historico.lift()
+
+    label_titulo = tk.Label(janela_historico, text="Histórico de Partidas", font=fonte_botoes, bg="#1e1e1e", fg="white" )
+    label_titulo.pack(pady=20)
+
+    texto_historico = tk.Text(janela_historico, width=80, height=20, font=fonte_botoes, bg="#1e1e1e", fg="white")
+    texto_historico.pack(pady=10)
+
+    try:
+        with open("historico.txt", "r", encoding="utf-8") as arquivo:
+            conteudo = arquivo.read()
+            if conteudo.strip() == "":
+                texto_historico.insert("1.0", "Nenhum histórico encontrado ainda.")
+            else:
+                texto_historico.insert("1.0", conteudo)
+    except FileNotFoundError:
+        open("historico.txt", "w", encoding="utf-8").close()
+        texto_historico.insert("1.0", "Nenhum histórico encontrado ainda.")
+
+    texto_historico.config(state="disabled")
+    
+    botao_voltar = tk.Button(
+        janela_historico,
+        text="Voltar",
+        command=janela_historico.destroy,
+        width=10,
+        height=1,
+        bg="#1A6DE2",
+        fg="white",
+        font=fonte_botoes
+    )
+    botao_voltar.place(x=20, y=620)
+
+def salvar_historico(pontos):
+    from datetime import datetime
+    agora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    with open("historico.txt", "a", encoding="utf-8") as arquivo:
+        arquivo.write(f"Pontuação: {pontos} - Data: {agora}\n")
+
+def tela_morte(tela, fonte_jogo, pontos):
+
+    vermelho = (255, 0, 0)
+    branco = (255, 255, 255)
+    preto = (0, 0, 0)
+
+    while True:
+
+        tela.fill(preto)
+
+        texto_game_over = fonte_jogo.render("GAME OVER", True, vermelho)
+        texto_pontuacao = fonte_jogo.render(f"Pontuação: {pontos}", True, branco)
+        texto_reiniciar = fonte_jogo.render("Precione R para jogar novamente", True, branco)
+        texto_voltar_menu = fonte_jogo.render("Precione M para voltar ao menu", True, branco)
+        fundo_morte = pygame.image.load("recursos/tela morte.png")
+        fundo_morte = pygame.transform.scale(fundo_morte, (1000, 700))
+        tela.blit(fundo_morte, (0,0))
+        tela.blit(texto_game_over, (360, 50))
+        tela.blit(texto_pontuacao, (350, 400))
+        tela.blit(texto_reiniciar, (150, 520))
+        tela.blit(texto_voltar_menu, (150, 600))
+
+        pygame.display.flip()
+
+        for evento in pygame.event.get():
+            if evento.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_r:
+                    iniciar_jogo()  # reinicia o jogo
+                    return
+                elif evento.key == pygame.K_m:
+                    from main import menu
+                    menu()
+                    return
+
 
 def iniciar_jogo():
      
     root.destroy()
-    
+
     pygame.init()
     pygame.mixer.init()
     tamanho = (1000,700)
@@ -226,8 +337,7 @@ def iniciar_jogo():
     posicao_peixe_douradoY = -100
     velocidade_peixe_dourado = 20
 
-    fonte_vidas = pygame.font.SysFont('Arial ',60)
-    fonte_pontos = pygame.font.SysFont('Arial ',60)
+    fonte_jogo = pygame.font.Font("recursos/fonte.ttf", 60)
     coracao = pygame.transform.scale(pygame.image.load("recursos/coracao.png"),(68, 68))
     vidas = 7
     pontos = 0
@@ -307,11 +417,12 @@ def iniciar_jogo():
         if pontos < 0:
             pontos = 0
             vidas -= 1
-        
+        if vidas <= 0:
+            salvar_historico(pontos)
+            tela_morte(tela, fonte_jogo, pontos)
         
         tela.fill(branco)
         tela.blit(fundo, (0, 0))  # Desenha o fundo
-       
         tela.blit(abajur[frame_abajur], (posicao_abajurX, posicao_abajurY))
         tela.blit(lareira[frame_lareira], (posicao_lareiraX , posicao_lareiraY))  # Desenha a lareira na posição (500, 200)
         tela.blit(coracao, (10, 20))
@@ -320,15 +431,18 @@ def iniciar_jogo():
         tela.blit(imagem_gato, (gato_x, gato_y))  # Desenha o gato na posição (gato_x, gato_y)
         tela.blit(peixe_dourado, (posicao_peixe_douradoX, posicao_peixe_douradoY))  # Desenha o peixe dourado na posição (300, 300)
         tela.blit(cogumelo_verde, (posicao_cogumelo_verdeX, posicao_cogumelo_verdeY))  # Desenha o cogumelo verde na posição (400, 400)
-        texto_vidas = fonte_vidas.render(f'= {vidas}', True, preto)
+        texto_vidas = fonte_jogo.render(f'= {vidas}', True, preto)
         tela.blit(texto_vidas, (80, 17))
-        texto_pontos = fonte_pontos.render(f'Pontos = {pontos}', True, preto)
+        texto_pontos = fonte_jogo.render(f'Pontos = {pontos}', True, preto)
         tela.blit(texto_pontos, (300, 17))
         if pausado:
-                fonte_pausa = pygame.font.SysFont("Arial", 72)
-                texto_pausa = fonte_pausa.render("PAUSADO", True, vermelho)
+                texto_pausa = fonte_jogo.render("PAUSADO", True, vermelho)
                 tela.blit(texto_pausa,(350, 300))
         pygame.display.flip()
         relogio.tick(60)  # Limita a 60 FPS 
 if __name__ == "__main__":
      menu()
+
+
+
+        
