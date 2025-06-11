@@ -2,9 +2,6 @@ import os
 import pygame
 import random
 import time
-import pyttsx3
-import speech_recognition as controlador_de_voz
-recognizer = controlador_de_voz.Recognizer()
 
 def numero_aleatorio(minimo, maximo):
     return random.randint(minimo, maximo)
@@ -74,3 +71,11 @@ def atualiza_cogumelo_verde(posicao_cogumelo_verdeX, posicao_cogumelo_verdeY, ve
             posicao_cogumelo_verdeY = -100
             posicao_cogumelo_verdeX = numero_aleatorio(0, 936)
     return posicao_cogumelo_verdeX, posicao_cogumelo_verdeY, vidas
+
+def salvar_historico(pontos, nome_jogador="Jogador"):
+    from datetime import datetime
+    agora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    with open("log.dat.txt", "a", encoding="utf-8") as arquivo:
+        arquivo.write(f"{nome_jogador}: {pontos} pontos - {agora}\n")
+
+
