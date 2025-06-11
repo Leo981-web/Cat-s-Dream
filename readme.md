@@ -22,3 +22,7 @@
 
 ---
 
+### Testador do Jogo
+**Maria Eduarda Moura Laimer**
+**RA:** *1137846*
+
