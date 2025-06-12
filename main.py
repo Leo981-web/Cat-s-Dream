@@ -19,13 +19,8 @@ voz.setProperty('rate', 150)
 def menu():
         
         global root
-        try:
-            root.destroy()
-        except:
-            pass
 
         pygame.mixer.init()
-        pygame.mixer.music.stop()
         pygame.mixer.music.load("recursos/musica menu.mp3")  
         pygame.mixer.music.set_volume(0.3)
         pygame.mixer.music.play(loops=-1)
@@ -69,8 +64,8 @@ def menu():
             root,
             text="Jogar",
             command=lambda: tela_transicao(iniciar_jogo),
-            width=20,
-            height=2,
+            width=15,
+            height=1,
             bg="#1A6DE2",  
             fg="white",
             font=fonte_botoes
@@ -81,8 +76,8 @@ def menu():
             root,
             text="Tutorial",
             command=mostrar_tutorial,
-            width=20,
-            height=2,
+            width=15,
+            height=1,
             bg="#1A6DE2",  
             fg="white",
             font=fonte_botoes
@@ -93,8 +88,8 @@ def menu():
             root,
             text="Historico",
             command=mostrar_historico,
-            width=20,
-            height=2,
+            width=15,
+            height=1,
             bg="#1A6DE2",  
             fg="white",
             font=fonte_botoes
@@ -105,8 +100,8 @@ def menu():
             root,
             text="Sair",
             command=sair_jogo,
-            width=20,
-            height=2,
+            width=15,
+            height=1,
             bg="#1A6DE2",  
             fg="white",
             font=fonte_botoes
@@ -123,7 +118,7 @@ def sair_jogo():
             pygame.quit()
             if "root" in globals():
                 try:
-                    root.destroy
+                    root.destroy()
                 except:
                     pass
             exit()
@@ -136,6 +131,7 @@ def sair_jogo():
 def mostrar_tutorial():
 
     janela_tutorial = tk.Toplevel(root)
+
     janela_tutorial.iconbitmap("recursos/icone.ico")
     janela_tutorial.title('Tutorial')
     janela_tutorial.configure(bg="#282c34")
@@ -268,20 +264,15 @@ def mostrar_historico():
     botao_deletar.place(x=670, y=10)
 
 def tela_morte(tela,pontos):
-
+    
     icone = pygame.image.load("recursos/icone.ico")
     pygame.display.set_icon(icone)
-    pygame.mixer.init()
     vermelho = (255, 0, 0)
     branco = (255, 255, 255)
     preto = (0, 0, 0)
     fonte_morte_titulo = pygame.font.Font("recursos/fonte.ttf", 80)
     fonte_morte_geral = pygame.font.Font("recursos/fonte.ttf", 40)
     fonte_hist = pygame.font.Font("recursos/fonte.ttf", 30)
-    pygame.mixer.music.stop()
-    trilha_morte = pygame.mixer.music.load("recursos/trilha morte.mp3")
-    pygame.mixer.music.set_volume(1.0) 
-    pygame.mixer.music.play(loops=-1)
 
     try:
         with open("log.dat.txt", "r", encoding="utf-8") as f:
@@ -316,14 +307,12 @@ def tela_morte(tela,pontos):
         tela.fill(preto)
         texto_game_over = fonte_morte_titulo.render("GAME OVER", True, vermelho)
         texto_pontuacao = fonte_morte_geral.render(f"Pontuação: {pontos}", True, branco)
-        texto_reiniciar = fonte_hist.render("Precione R para jogar novamente", True, branco)
         texto_voltar_menu = fonte_hist.render("Precione M para voltar ao menu", True, branco)
         fundo_morte = pygame.image.load("recursos/tela morte.png")
         fundo_morte = pygame.transform.scale(fundo_morte, (1000, 700))
         tela.blit(fundo_morte, (0,0))
         tela.blit(texto_game_over, (320, 40))
         tela.blit(texto_pontuacao, (320, 120))
-        tela.blit(texto_reiniciar, (80, 620))
         tela.blit(texto_voltar_menu, (80, 650))
 
         tela.blit(fonte_hist.render("1: " + um, True, branco),    (250, 380))
@@ -339,9 +328,7 @@ def tela_morte(tela,pontos):
             if evento.type == pygame.QUIT:
                 return 'sair'
             if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_r:
-                    return 'reiniciar'
-                elif evento.key == pygame.K_m:
+                if evento.key == pygame.K_m:
                     return 'menu'
 
 def tela_transicao(callback):
@@ -423,7 +410,6 @@ def tela_transicao(callback):
         height=2
     )
     botao_digitar_nome.pack(pady=20)
-  
 
 def iniciar_jogo(nome_jogador):
 
@@ -599,15 +585,15 @@ def iniciar_jogo(nome_jogador):
             vidas -= 1
 
         if vidas <= 0:
-            salvar_historico(pontos, nome_jogador)
+            salvar_historico(pontos,nome_jogador)
             acao = tela_morte(tela, pontos)
-            pygame.display.quit()  
-            if acao == 'reiniciar':
-                tela_transicao(iniciar_jogo)   
-            elif acao == 'menu':
-                root.deiconify()        
-                return      
-        
+            if acao == 'menu':
+                root.deiconify()
+                pygame.mixer.music.load("recursos/musica menu.mp3")
+                pygame.mixer.music.set_volume(0.3)
+                pygame.mixer.music.play(loops=-1)
+                return 
+     
         tela.fill(branco)
         tela.blit(fundo, (0, 0))  # Desenha o fundo
         tela.blit(abajur[frame_abajur], (posicao_abajurX, posicao_abajurY))
@@ -636,3 +622,4 @@ def iniciar_jogo(nome_jogador):
         relogio.tick(60)  # Limita a 60 FPS 
 if __name__ == "__main__":
      menu()
+
