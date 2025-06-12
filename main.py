@@ -321,7 +321,6 @@ def tela_morte(tela,pontos):
         tela.blit(fonte_hist.render("4: " + quatro, True, branco),(250, 500))
         tela.blit(fonte_hist.render("5: " + cinco, True, branco), (250, 540))
         
-
         pygame.display.flip()
 
         for evento in pygame.event.get():
@@ -622,4 +621,3 @@ def iniciar_jogo(nome_jogador):
         relogio.tick(60)  # Limita a 60 FPS 
 if __name__ == "__main__":
      menu()
-
